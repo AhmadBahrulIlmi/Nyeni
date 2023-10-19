@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  FlatList,
 } from 'react-native';
 import {
   SearchNormal1,
@@ -18,6 +19,43 @@ import {
   Bookmark,
 } from 'iconsax-react-native';
 import {fontType, colors} from './src/theme';
+import {CategoryList, kontenPopuler} from './data';
+import {ListKontenPopuler, Navbar} from './src/components';
+
+const ItemCategory = ({item, onPress, color}) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View style={category.item}>
+        <Text style={{...category.title, color}}>{item.categoryName}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const FlatListCategory = () => {
+  const [selected, setSelected] = useState(1);
+  const renderItem = ({item}) => {
+    const color = item.id === selected ? colors.black() : colors.grey();
+    return (
+      <ItemCategory
+        item={item}
+        onPress={() => setSelected(item.id)}
+        color={color}
+      />
+    );
+  };
+  return (
+    <FlatList
+      data={CategoryList}
+      keyExtractor={item => item.id}
+      renderItem={item => renderItem({...item})}
+      ItemSeparatorComponent={() => <View style={{width: 10}} />}
+      contentContainerStyle={{paddingHorizontal: 24}}
+      horizontal
+      showsHorizontalScrollIndicator={false}
+    />
+  );
+};
 
 export default function App() {
   const [searchText, setSearchText] = useState('');
@@ -62,7 +100,8 @@ export default function App() {
         </View>
       </View>
       <View style={styles.listCategory}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <FlatListCategory />
+        {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <View style={{...category.item, marginLeft: 24}}>
             <Text style={category.title}>Populer</Text>
           </View>
@@ -78,7 +117,7 @@ export default function App() {
           <View style={category.item}>
             <Text style={category.title}>Kerajinan Tangan</Text>
           </View>
-        </ScrollView>
+        </ScrollView> */}
       </View>
       <View style={{...styles.divider, marginLeft: 24, marginRight: 24}}></View>
       <IsiKonten />
@@ -202,7 +241,10 @@ const IsiKonten = () => {
         <Text style={styles.titlePopuler}>Populer</Text>
       </View>
       <View style={styles.IsiKonten}>
-        <ScrollView
+        <View style={{marginHorizontal: 20}}>
+          <ListKontenPopuler data={kontenPopuler} />
+        </View>
+        {/* <ScrollView
           showsHorizontalScrollIndicator={false}
           horizontal
           contentContainerStyle={{gap: 5}}>
@@ -291,7 +333,7 @@ const IsiKonten = () => {
               </View>
             </View>
           </View>
-        </ScrollView>
+        </ScrollView> */}
       </View>
       <View>
         <ScrollView
