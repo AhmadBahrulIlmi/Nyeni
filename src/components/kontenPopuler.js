@@ -8,8 +8,15 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import {fontType, colors} from '../theme';
-import {Like1} from 'iconsax-react-native';
-const ItemHorizontal = ({item, variant, onPress}) => {
+import {ArchiveMinus, Like1} from 'iconsax-react-native';
+
+const ItemHorizontal = ({
+  item,
+  isLiked,
+  isBookmarked,
+  onLikePress,
+  onBookmarkPress,
+}) => {
   return (
     <View style={{...itemHorizontal.card}}>
       <Image
@@ -24,14 +31,22 @@ const ItemHorizontal = ({item, variant, onPress}) => {
         <Text style={itemHorizontal.cardText}>{item.description}</Text>
         <View style={itemHorizontal.cardFooter}>
           <View style={itemHorizontal.iconContainer}>
-            <TouchableOpacity onPress={onPress}>
+            <TouchableOpacity onPress={onLikePress}>
               <Like1
-                color="rgb(255, 161, 0)"
-                variant={variant}
+                color={isLiked ? 'rgb(255, 161, 0)' : 'rgb(255, 161, 0)'}
+                variant={isLiked ? 'Bold' : 'Linear'}
                 size={25}
                 style={itemHorizontal.icon}
               />
             </TouchableOpacity>
+            <TouchableOpacity style={{ position: 'absolute', bottom: 155, left:255 }} onPress={onBookmarkPress}>
+            <ArchiveMinus
+              color={isBookmarked ? 'rgb(255, 161, 0)' : 'rgb(255, 161, 0)'}
+              variant={isBookmarked ? 'Bold' : 'Linear'}
+              size={25}
+              style={itemHorizontal.icon}
+            />
+          </TouchableOpacity>
           </View>
           <View style={itemHorizontal.viewContainer}>
             <Text>Lihat Detail..</Text>
@@ -41,36 +56,51 @@ const ItemHorizontal = ({item, variant, onPress}) => {
     </View>
   );
 };
+
 const ListKontenPopuler = ({data}) => {
-  const [like, setLike] = useState([]);
+  const [likedItem, setLikedItem] = useState(null);
+  const [bookmarkedItem, setBookmarkedItem] = useState(null);
+
   const toggleLike = itemId => {
-    if (like.includes(itemId)) {
-      setLike(like.filter(id => id !== itemId));
+    if (likedItem === itemId) {
+      setLikedItem(null);
     } else {
-      setLike([...like, itemId]);
+      setLikedItem(itemId);
     }
   };
+
+  const toggleBookmark = itemId => {
+    if (bookmarkedItem === itemId) {
+      setBookmarkedItem(null);
+    } else {
+      setBookmarkedItem(itemId);
+    }
+  };
+
   const renderItem = ({item}) => {
-    variant = like.includes(item.id) ? 'Bold' : 'Linear';
     return (
       <ItemHorizontal
         item={item}
-        variant={variant}
-        onPress={() => toggleLike(item.id)}
+        isLiked={likedItem === item.id}
+        isBookmarked={bookmarkedItem === item.id}
+        onLikePress={() => toggleLike(item.id)}
+        onBookmarkPress={() => toggleBookmark(item.id)}
       />
     );
   };
+
   return (
     <FlatList
       data={data}
       keyExtractor={item => item.id}
-      renderItem={item => renderItem({...item})}
+      renderItem={renderItem}
       ItemSeparatorComponent={() => <View style={{width: 15}} />}
       horizontal
       showsHorizontalScrollIndicator={false}
     />
   );
 };
+
 export default ListKontenPopuler;
 const itemHorizontal = StyleSheet.create({
   card: {

@@ -12,15 +12,14 @@ import {
 import {
   SearchNormal1,
   NotificationBing,
-  Like1,
   Setting2,
   Home2,
   BookSquare,
-  Bookmark,
+  ArrowRotateLeft,
 } from 'iconsax-react-native';
 import {fontType, colors} from './src/theme';
 import {CategoryList, kontenPopuler} from './data';
-import {ListKontenPopuler, Navbar} from './src/components';
+import {ListKontenPopuler} from './src/components';
 
 const ItemCategory = ({item, onPress, color}) => {
   return (
@@ -49,8 +48,8 @@ const FlatListCategory = () => {
       data={CategoryList}
       keyExtractor={item => item.id}
       renderItem={item => renderItem({...item})}
-      ItemSeparatorComponent={() => <View style={{width: 10}} />}
-      contentContainerStyle={{paddingHorizontal: 24}}
+      ItemSeparatorComponent={() => <View style={{gap: 0}} />}
+      contentContainerStyle={{paddingHorizontal: 20}}
       horizontal
       showsHorizontalScrollIndicator={false}
     />
@@ -95,29 +94,12 @@ export default function App() {
             placeholder="Cari Konten"
             onChangeText={handleSearchPress}
             value={searchText}
-            placeholderTextColor="gray"
+            placeholderTextColor="grey"
           />
         </View>
       </View>
       <View style={styles.listCategory}>
         <FlatListCategory />
-        {/* <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <View style={{...category.item, marginLeft: 24}}>
-            <Text style={category.title}>Populer</Text>
-          </View>
-          <View style={category.item}>
-            <Text style={category.title}>Seni Tari</Text>
-          </View>
-          <View style={category.item}>
-            <Text style={category.title}>Musik</Text>
-          </View>
-          <View style={category.item}>
-            <Text style={category.title}>Pertunjukan</Text>
-          </View>
-          <View style={category.item}>
-            <Text style={category.title}>Kerajinan Tangan</Text>
-          </View>
-        </ScrollView> */}
       </View>
       <View style={{...styles.divider, marginLeft: 24, marginRight: 24}}></View>
       <IsiKonten />
@@ -131,13 +113,14 @@ export default function App() {
           <Text style={styles.navbarText}>Other</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.navbarItem}>
-          <Bookmark color="rgb(255, 161, 0)" variant="Linear" size={24} />
+          <ArrowRotateLeft color="rgb(255, 161, 0)" variant="Linear" size={24} />
           <Text style={styles.navbarText}>History</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   navbarContainer: {
     flexDirection: 'row',
@@ -244,96 +227,6 @@ const IsiKonten = () => {
         <View style={{marginHorizontal: 20}}>
           <ListKontenPopuler data={kontenPopuler} />
         </View>
-        {/* <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          contentContainerStyle={{gap: 5}}>
-          <View style={{...itemHorizontal.card, marginLeft: 24}}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/b6/5c/66/b65c66326463167bce1675efa26eaa35.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardDescription}>
-              <Text style={itemHorizontal.cardCategory}>Seni Tari</Text>
-              <Text style={itemHorizontal.cardTitle}>Jaranan</Text>
-              <Text style={itemHorizontal.cardText}>
-                Kesenian ini merupakan bentuk Samanisme dalam ajaran animisme
-              </Text>
-              <View style={itemHorizontal.cardFooter}>
-                <View style={itemHorizontal.iconContainer}>
-                  <Like1
-                    color="rgb(255, 161, 0)"
-                    variant="Linear"
-                    size={25}
-                    style={itemHorizontal.icon}
-                  />
-                </View>
-                <View style={itemHorizontal.viewContainer}>
-                  <Text>Lihat Detail..</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={{...itemHorizontal.card}}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/f0/9f/4e/f09f4eb71703ed9f7947c1cf70800df9.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardDescription}>
-              <Text style={itemHorizontal.cardCategory}>Musik</Text>
-              <Text style={itemHorizontal.cardTitle}>Gamelan Jawa</Text>
-              <Text style={itemHorizontal.cardText}>
-                Kesenian musik perkusi yang digunakan pada seni musik karawitan
-              </Text>
-              <View style={itemHorizontal.cardFooter}>
-                <View style={itemHorizontal.iconContainer}>
-                  <Like1
-                    color="rgb(255, 161, 0)"
-                    variant="Linear"
-                    size={25}
-                    style={itemHorizontal.icon}
-                  />
-                </View>
-                <View style={itemHorizontal.viewContainer}>
-                  <Text>Lihat Detail..</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={{...itemHorizontal.card}}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/2b/d2/42/2bd242c1c898e670414a2d622a425439.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardDescription}>
-              <Text style={itemHorizontal.cardCategory}>Pertunjukan</Text>
-              <Text style={itemHorizontal.cardTitle}>Ludruk</Text>
-              <Text style={itemHorizontal.cardText}>
-                Kesenian ini drama tradisional jawa timur yang diperagakan oleh
-                sebuah grup kesenian
-              </Text>
-              <View style={itemHorizontal.cardFooter}>
-                <View style={itemHorizontal.iconContainer}>
-                  <Like1
-                    color="rgb(255, 161, 0)"
-                    variant="Linear"
-                    size={25}
-                    style={itemHorizontal.icon}
-                  />
-                </View>
-                <View style={itemHorizontal.viewContainer}>
-                  <Text>Lihat Detail..</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </ScrollView> */}
       </View>
       <View>
         <ScrollView
@@ -400,11 +293,32 @@ const IsiKonten = () => {
               <Text style={itemHorizontal.cardMiniText}>Kerajinan</Text>
             </View>
           </View>
+          <View
+            style={{
+              ...itemHorizontal.card,
+              marginTop: 20,
+              marginLeft: 24,
+              width: 200,
+              height: 100,
+              position: 'relative',
+              opacity: 0.8,
+            }}>
+            <Image
+              source={{
+                uri: 'https://i.pinimg.com/564x/31/e5/10/31e5101a39b50a9ea93acf3672f107fe.jpg',
+              }}
+              style={itemHorizontal.cardImage}
+            />
+            <View style={itemHorizontal.cardIsi}>
+              <Text style={itemHorizontal.cardMiniText}>Pertunjukan</Text>
+            </View>
+          </View>
         </ScrollView>
       </View>
     </ScrollView>
   );
 };
+
 const itemHorizontal = StyleSheet.create({
   card: {
     backgroundColor: 'white',
