@@ -1,2 +1,3 @@
 import ListKontenPopuler from './kontenPopuler';
-export {ListKontenPopuler};
+import ListKontenKategori from './kategori';
+export {ListKontenPopuler, ListKontenKategori};
