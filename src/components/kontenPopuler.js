@@ -9,7 +9,8 @@ import {
 import React, {useState} from 'react';
 import {fontType, colors} from '../theme';
 import {ArchiveMinus, Like1} from 'iconsax-react-native';
-
+import {useNavigation} from '@react-navigation/native';
+const navigation = useNavigation();
 const ItemHorizontal = ({
   item,
   isLiked,
@@ -39,18 +40,22 @@ const ItemHorizontal = ({
                 style={itemHorizontal.icon}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={{ position: 'absolute', bottom: 155, left:255 }} onPress={onBookmarkPress}>
-            <ArchiveMinus
-              color={isBookmarked ? 'rgb(255, 161, 0)' : 'rgb(255, 161, 0)'}
-              variant={isBookmarked ? 'Bold' : 'Linear'}
-              size={25}
-              style={itemHorizontal.icon}
-            />
+            <TouchableOpacity
+              style={{position: 'absolute', bottom: 155, left: 255}}
+              onPress={onBookmarkPress}>
+              <ArchiveMinus
+                color={isBookmarked ? 'rgb(255, 161, 0)' : 'rgb(255, 161, 0)'}
+                variant={isBookmarked ? 'Bold' : 'Linear'}
+                size={25}
+                style={itemHorizontal.icon}
+              />
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            style={itemHorizontal.viewContainer}
+            onPress={() => navigation.navigate('Detail', {detailId: item.id})}>
+            <Text style={{color: 'rgb(255, 161, 0)'}}>Lihat Detail..</Text>
           </TouchableOpacity>
-          </View>
-          <View style={itemHorizontal.viewContainer}>
-            <Text>Lihat Detail..</Text>
-          </View>
         </View>
       </View>
     </View>

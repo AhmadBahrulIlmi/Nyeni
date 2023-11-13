@@ -2,17 +2,16 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
-  TouchableOpacity,
   Image,
 } from 'react-native';
 import React, {useState} from 'react';
 import {fontType, colors} from '../theme';
-import {ArchiveMinus, Like1} from 'iconsax-react-native';
-
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import {useNavigation} from '@react-navigation/native';
 const ListKontenKategori = ({item}) => {
+  const navigation = useNavigation();
   return (
-    <View style={{...itemHorizontal.card}}>
+    <TouchableOpacity style={{...itemHorizontal.card}}onPress={() => navigation.navigate('detailKategori', {kategoriID: item.id})}>
       <Image
         source={{
           uri: item.image,
@@ -23,7 +22,7 @@ const ListKontenKategori = ({item}) => {
         <Text style={itemHorizontal.cardCategory}>{item.category}</Text>
         <Text style={itemHorizontal.cardText}>{item.description}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

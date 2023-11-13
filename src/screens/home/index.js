@@ -13,9 +13,6 @@ import {
   SearchNormal1,
   NotificationBing,
   Setting2,
-  Home2,
-  BookSquare,
-  ArrowRotateLeft,
 } from 'iconsax-react-native';
 import {fontType, colors} from '../../theme';
 import {CategoryList, kontenPopuler} from '../../../data';
