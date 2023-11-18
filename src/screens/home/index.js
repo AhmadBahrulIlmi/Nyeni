@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -8,15 +8,14 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  Animated,
 } from 'react-native';
-import {
-  SearchNormal1,
-  NotificationBing,
-  Setting2,
-} from 'iconsax-react-native';
+import {SearchNormal1, NotificationBing, Setting2} from 'iconsax-react-native';
 import {fontType, colors} from '../../theme';
 import {CategoryList, kontenPopuler} from '../../../data';
 import {ListKontenPopuler} from '../../components';
+
+const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
 
 const ItemCategory = ({item, onPress, color}) => {
   return (
@@ -54,9 +53,43 @@ const FlatListCategory = () => {
 };
 
 export default function Home() {
+  const animatedValue = useRef(new Animated.Value(0)).current;
   const [searchText, setSearchText] = useState('');
+
+  const searchInputAnimation = {
+    transform: [
+      {
+        scaleX: animatedValue.interpolate({
+          inputRange: [0, 50],
+          outputRange: [1, 0],
+          extrapolate: 'clamp',
+        }),
+      },
+      {
+        translateX: animatedValue.interpolate({
+          inputRange: [0, 25],
+          outputRange: [0, -100],
+          extrapolate: 'clamp',
+        }),
+      },
+    ],
+    opacity: animatedValue.interpolate({
+      inputRange: [0, 25],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    }),
+  };
+
   const handleSearchPress = text => {
     setSearchText(text);
+  };
+
+  const listCategoryAnimation = {
+    marginTop: animatedValue.interpolate({
+      inputRange: [0, 60],
+      outputRange: [0, -60],
+      extrapolate: 'clamp',
+    }),
   };
 
   return (
@@ -78,28 +111,29 @@ export default function Home() {
           <Setting2 color="rgb(255, 161, 0)" variant="Linear" size={24} />
         </View>
       </View>
+
       <View style={{paddingHorizontal: 24, marginTop: 10}}>
-        <View style={styles.searchContainer}>
+        <Animated.View
+          style={{...styles.searchContainer, ...searchInputAnimation}}>
           <SearchNormal1
             color={colors.black()}
             variant="Linear"
             size={20}
             style={styles.icon}
           />
-          <TextInput
-            style={styles.input}
+          <AnimatedTextInput
+            style={[styles.input]}
             placeholder="Cari Konten"
             onChangeText={handleSearchPress}
-            value={searchText}
-            placeholderTextColor="grey"
+            defaultValue={searchText}
           />
-        </View>
+        </Animated.View>
       </View>
-      <View style={styles.listCategory}>
+      <Animated.View style={{...styles.listCategory, ...listCategoryAnimation}}>
         <FlatListCategory />
-      </View>
+      </Animated.View>
       <View style={{...styles.divider, marginLeft: 24, marginRight: 24}}></View>
-      <IsiKonten />
+      <IsiKonten animatedValue={animatedValue} />
     </View>
   );
 }
@@ -167,12 +201,9 @@ const styles = StyleSheet.create({
   },
   searchContainer: {
     borderRadius: 20,
-    backgroundColor: 'rgb(240, 240, 240)',
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  searchButtonContainer: {
-    paddingLeft: 14,
+    backgroundColor: 'rgb(240, 240, 240)',
   },
   icon: {
     margin: 7,
@@ -200,9 +231,15 @@ const category = StyleSheet.create({
   },
 });
 
-const IsiKonten = () => {
+const IsiKonten = ({animatedValue}) => {
   return (
-    <ScrollView>
+    <ScrollView
+    showsVerticalScrollIndicator={false}
+      onScroll={Animated.event(
+        [{nativeEvent: {contentOffset: {y: animatedValue}}}],
+        {useNativeDriver: false},
+      )}
+      scrollEventThrottle={16}>
       <View style={styles.headerPopuler}>
         <Text style={styles.titlePopuler}>Populer</Text>
       </View>
@@ -210,6 +247,93 @@ const IsiKonten = () => {
         <View style={{marginHorizontal: 20}}>
           <ListKontenPopuler data={kontenPopuler} />
         </View>
+      </View>
+      <View>
+        <ScrollView
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          contentContainerStyle={{gap: 0}}>
+          <View
+            style={{
+              ...itemHorizontal.card,
+              marginTop: 20,
+              marginLeft: 24,
+              width: 200,
+              height: 100,
+              position: 'relative',
+              opacity: 0.8,
+            }}>
+            <Image
+              source={{
+                uri: 'https://i.pinimg.com/736x/7e/0d/a9/7e0da932ed99c04c700899f6bb7f659e.jpg',
+              }}
+              style={itemHorizontal.cardImage}
+            />
+            <View style={itemHorizontal.cardIsi}>
+              <Text style={itemHorizontal.cardMiniText}>Musik</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              ...itemHorizontal.card,
+              marginTop: 20,
+              marginLeft: 24,
+              width: 200,
+              height: 100,
+              position: 'relative',
+              opacity: 0.8,
+            }}>
+            <Image
+              source={{
+                uri: 'https://i.pinimg.com/564x/0f/5f/57/0f5f57953abd50242da45a458a3fb2cd.jpg',
+              }}
+              style={itemHorizontal.cardImage}
+            />
+            <View style={itemHorizontal.cardIsi}>
+              <Text style={itemHorizontal.cardMiniText}>Seni Tari</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              ...itemHorizontal.card,
+              marginTop: 20,
+              marginLeft: 24,
+              width: 200,
+              height: 100,
+              position: 'relative',
+              opacity: 0.8,
+            }}>
+            <Image
+              source={{
+                uri: 'https://i.pinimg.com/564x/0b/5b/3c/0b5b3c05788a2dfc3814d127dc0b5a10.jpg',
+              }}
+              style={itemHorizontal.cardImage}
+            />
+            <View style={itemHorizontal.cardIsi}>
+              <Text style={itemHorizontal.cardMiniText}>Kerajinan</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              ...itemHorizontal.card,
+              marginTop: 20,
+              marginLeft: 24,
+              width: 200,
+              height: 100,
+              position: 'relative',
+              opacity: 0.8,
+            }}>
+            <Image
+              source={{
+                uri: 'https://i.pinimg.com/564x/31/e5/10/31e5101a39b50a9ea93acf3672f107fe.jpg',
+              }}
+              style={itemHorizontal.cardImage}
+            />
+            <View style={itemHorizontal.cardIsi}>
+              <Text style={itemHorizontal.cardMiniText}>Pertunjukan</Text>
+            </View>
+          </View>
+        </ScrollView>
       </View>
       <View>
         <ScrollView

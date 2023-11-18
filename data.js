@@ -69,7 +69,7 @@ export const kontenPopulerDetail = [
     origin:
       'Gamelan memiliki akar yang dalam dalam sejarah Indonesia. Meskipun tidak jelas kapan gamelan muncul pertama kali, sejarahnya dapat ditelusuri hingga masa-masa awal peradaban Indonesia. Instrumen-instrumen gamelan terbuat dari logam, kayu, dan kulit, dan setiap instrumen memiliki peran penting dalam menciptakan suara yang harmonis dan unik.',
     conclusion:
-      'Gamelan adalah simbol kekayaan seni dan budaya Indonesia. Dengan instrumen yang indah dan peranannya yang mendalam dalam berbagai aspek kehidupan masyarakat, gamelan terus hidup sebagai warisan yang patut dijaga. Di tengah arus globalisasi, upaya untuk melestarikan dan mempromosikan gamelan akan terus membantu mempertahankan kekayaan budaya Indonesia untuk generasi mendatang.',
+      'Gamelan terdiri dari sejumlah alat musik. Umumnya seperti gendang, gong, suling, gambang, rebab, siter, dan masih banyak lagi. Berikut beberapa instrumen musik yang ada di gamelan: Gendang atau kendang berfungsi sebagai pengatur irama dan tempo yang dimainkan. Cara memainkannya dengan menabuh atau memukul permukaan gendang yang ditutupi kulit hewan. Lalu, ada gong yang terbuat dari logam kuningan dan digantung. Saat dimainkan, gong dipegang oleh lima jari lalu dipukul dengan stik pendek. Alat ini berfungsi sebagai pemangku irama, untuk menguatkan gendang dalam menentukan bentuk gending. Kemudian suling berfungsi sebagai pengisi lagu. Biasanya terbuat dari bambu yang diberi lubang sebagai penentu nada. Suling dibagi menjadi suling slendro dan pelog yang dibedakan menurut letak lubangnya. Gambang terdiri dari susunan bilah-bilah kayu atau bambu berjumlah 18 buah yang diletakkan di rak resonator. Bilah ini disusun berjajar dari yang paling kecil hingga terbesar untuk menghasilkan nada bervariasi. Fungsi gambang untuk pemangku lagu, memperindah lagu dengan cengkok, dan pembuka gending-gending gambang. Alat ini dipukul dengan tabuh. Selanjutnya, rebab adalah alat musik gesek yang mempunyai tiga atau dua utas dawai dari logam (tembaga).',
     image:
       'https://i.pinimg.com/564x/f0/9f/4e/f09f4eb71703ed9f7947c1cf70800df9.jpg',
   },
@@ -173,31 +173,31 @@ export const ListKategori = [
 export const ListDetailKategori = [
   {
     id: 1,
-    category:'Gamelan',
+    category: 'Gamelan',
     image:
       'https://i.pinimg.com/564x/f0/9f/4e/f09f4eb71703ed9f7947c1cf70800df9.jpg',
   },
   {
     id: 2,
-    category:'Ludruk',
+    category: 'Ludruk',
     image:
       'https://i.pinimg.com/564x/2b/d2/42/2bd242c1c898e670414a2d622a425439.jpg',
   },
   {
     id: 3,
-    category:'Tari Remo',
+    category: 'Tari Remo',
     image:
       'https://i.pinimg.com/564x/8a/94/96/8a9496ecec48b05ca970b3e73d8bd3b4.jpg',
   },
   {
     id: 4,
-    category:'Keramik',
+    category: 'Keramik',
     image:
       'https://i.pinimg.com/564x/6f/b9/59/6fb9592e9be445f654ba67146f4df20d.jpg',
   },
   {
     id: 5,
-    category:'Werkudara',
+    category: 'Werkudara',
     image:
       'https://i.pinimg.com/564x/9e/53/63/9e53639a53f198631b8d2fcf3d0b3446.jpg',
   },
