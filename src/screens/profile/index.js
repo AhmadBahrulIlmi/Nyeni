@@ -8,9 +8,19 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {fontType, colors} from '../../theme';
-import {NotificationBing, Setting2, BookSaved, ArrowRotateLeft, Setting, Logout} from 'iconsax-react-native';
+import {
+  NotificationBing,
+  Setting2,
+  BookSaved,
+  ArrowRotateLeft,
+  Setting,
+  Logout,
+  AddSquare,
+} from 'iconsax-react-native';
+import {useNavigation} from '@react-navigation/native';
 
 export default function Profile() {
+  const navigation = useNavigation();
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -45,55 +55,69 @@ export default function Profile() {
           <Text style={styles.buttonText}>Edit Profil</Text>
         </TouchableOpacity>
       </View>
-      <View style={{ paddingTop:30 }}>
-      <TouchableOpacity style={styles.menuItem}>
-        <View
-          style={{
-            ...styles.menuContainer,
-            flexDirection: 'row',
-            gap: 10,
-            alignItems: 'center',
-          }}>
-          <BookSaved color="rgb(255, 161, 0)" size={20} />
-          <Text style={styles.menuItemText}>Preferensi Bacaan</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.menuItem}>
-        <View
-          style={{
-            ...styles.menuContainer,
-            flexDirection: 'row',
-            gap: 10,
-            alignItems: 'center',
-          }}>
-          <ArrowRotateLeft color="rgb(255, 161, 0)" size={20} />
-          <Text style={styles.menuItemText}>Riwayat</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.menuItem}>
-        <View
-          style={{
-            ...styles.menuContainer,
-            flexDirection: 'row',
-            gap: 10,
-            alignItems: 'center',
-          }}>
-          <Setting color="rgb(255, 161, 0)" size={20} />
-          <Text style={styles.menuItemText}>Pengaturan</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.menuItem}>
-        <View
-          style={{
-            ...styles.menuContainer,
-            flexDirection: 'row',
-            gap: 10,
-            alignItems: 'center',
-          }}>
-          <Logout color="rgb(255, 161, 0)" size={20} />
-          <Text style={styles.menuItemText}>Keluar</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={{paddingTop: 30}}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate('TambahKonten')}>
+          <View
+            style={{
+              ...styles.menuContainer,
+              flexDirection: 'row',
+              gap: 10,
+              alignItems: 'center',
+            }}>
+            <AddSquare color="rgb(255, 161, 0)" size={20} />
+            <Text style={styles.menuItemText}>Tambah Konten</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <View
+            style={{
+              ...styles.menuContainer,
+              flexDirection: 'row',
+              gap: 10,
+              alignItems: 'center',
+            }}>
+            <BookSaved color="rgb(255, 161, 0)" size={20} />
+            <Text style={styles.menuItemText}>Preferensi Bacaan</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <View
+            style={{
+              ...styles.menuContainer,
+              flexDirection: 'row',
+              gap: 10,
+              alignItems: 'center',
+            }}>
+            <ArrowRotateLeft color="rgb(255, 161, 0)" size={20} />
+            <Text style={styles.menuItemText}>Riwayat</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <View
+            style={{
+              ...styles.menuContainer,
+              flexDirection: 'row',
+              gap: 10,
+              alignItems: 'center',
+            }}>
+            <Setting color="rgb(255, 161, 0)" size={20} />
+            <Text style={styles.menuItemText}>Pengaturan</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
+          <View
+            style={{
+              ...styles.menuContainer,
+              flexDirection: 'row',
+              gap: 10,
+              alignItems: 'center',
+            }}>
+            <Logout color="rgb(255, 161, 0)" size={20} />
+            <Text style={styles.menuItemText}>Keluar</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

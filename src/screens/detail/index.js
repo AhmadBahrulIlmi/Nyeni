@@ -1,13 +1,5 @@
 import React, {useState, useRef} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  Animated,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Image, Animated} from 'react-native';
 import {
   Back,
 } from 'iconsax-react-native';
@@ -35,7 +27,6 @@ const Detail = ({route}) => {
           {useNativeDriver: true},
         )}
         contentContainerStyle={{
-
         }}>
         <Image
           style={styles.image}

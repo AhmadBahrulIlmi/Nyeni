@@ -7,6 +7,8 @@ import {
   Kategori,
   Profile,
   DetailKategori,
+  search,
+  TambahKonten,
 } from '../screens';
 import {
   Home2,
@@ -112,6 +114,26 @@ const Router = () => {
           animationTypeForReplace: 'pop',
           gestureEnabled: true,
           gestureDirection: 'horizontal',
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+      <Stack.Screen
+        name="CariKonten"
+        component={search}
+        options={{
+          headerShown: false,
+          presentation: 'transparentModal',
+        }}
+      />
+      <Stack.Screen
+        name="TambahKonten"
+        component={TambahKonten}
+        options={{
+          headerShown: false,
+          animationEnabled: true,
+          animationTypeForReplace: 'pop',
+          gestureEnabled: true,
+          gestureDirection : 'horizontal',
           ...TransitionPresets.SlideFromRightIOS,
         }}
       />

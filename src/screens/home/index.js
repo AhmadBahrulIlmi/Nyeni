@@ -9,13 +9,13 @@ import {
   TouchableOpacity,
   FlatList,
   Animated,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {SearchNormal1, NotificationBing, Setting2} from 'iconsax-react-native';
 import {fontType, colors} from '../../theme';
 import {CategoryList, kontenPopuler} from '../../../data';
 import {ListKontenPopuler} from '../../components';
-
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+import {useNavigation} from '@react-navigation/native';
 
 const ItemCategory = ({item, onPress, color}) => {
   return (
@@ -53,8 +53,8 @@ const FlatListCategory = () => {
 };
 
 export default function Home() {
+  const navigation = useNavigation();
   const animatedValue = useRef(new Animated.Value(0)).current;
-  const [searchText, setSearchText] = useState('');
 
   const searchInputAnimation = {
     transform: [
@@ -80,14 +80,10 @@ export default function Home() {
     }),
   };
 
-  const handleSearchPress = text => {
-    setSearchText(text);
-  };
-
   const listCategoryAnimation = {
     marginTop: animatedValue.interpolate({
       inputRange: [0, 60],
-      outputRange: [0, -60],
+      outputRange: [0, -50],
       extrapolate: 'clamp',
     }),
   };
@@ -115,18 +111,17 @@ export default function Home() {
       <View style={{paddingHorizontal: 24, marginTop: 10}}>
         <Animated.View
           style={{...styles.searchContainer, ...searchInputAnimation}}>
-          <SearchNormal1
-            color={colors.black()}
-            variant="Linear"
-            size={20}
-            style={styles.icon}
-          />
-          <AnimatedTextInput
-            style={[styles.input]}
-            placeholder="Cari Konten"
-            onChangeText={handleSearchPress}
-            defaultValue={searchText}
-          />
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate('CariKonten')}>
+            <View style={styles.bgSearch}>
+              <SearchNormal1
+                size={18}
+                color={colors.grey(0.5)}
+                variant="Linear"
+              />
+              <Text style={styles.textSeacrh}>Cari Konten</Text>
+            </View>
+          </TouchableWithoutFeedback>
         </Animated.View>
       </View>
       <Animated.View style={{...styles.listCategory, ...listCategoryAnimation}}>
@@ -139,23 +134,6 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  navbarContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    height: 50,
-    elevation: 5,
-  },
-  navbarItem: {
-    alignItems: 'center',
-    padding: 10,
-  },
-  navbarText: {
-    fontSize: 12,
-    color: 'rgb(0, 0, 0)',
-    marginTop: 1,
-  },
   container: {
     flex: 1,
     backgroundColor: colors.white(),
@@ -168,6 +146,20 @@ const styles = StyleSheet.create({
     elevation: 8,
     paddingTop: 8,
     paddingBottom: 4,
+  },
+  bgSearch: {
+    flexDirection: 'row',
+    position: 'relative',
+    alignItems: 'center',
+    height: 45,
+    padding: 15,
+    gap: 10,
+  },
+  textSeacrh: {
+    fontSize: 15,
+    fontFamily: fontType['Pjs-Light'],
+    color: colors.grey(0.5),
+    lineHeight: 18,
   },
   headerPopuler: {
     paddingHorizontal: 24,
@@ -234,7 +226,7 @@ const category = StyleSheet.create({
 const IsiKonten = ({animatedValue}) => {
   return (
     <ScrollView
-    showsVerticalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
       onScroll={Animated.event(
         [{nativeEvent: {contentOffset: {y: animatedValue}}}],
         {useNativeDriver: false},

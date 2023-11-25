@@ -1,3 +1,4 @@
 import ListKontenPopuler from './kontenPopuler';
 import ListKontenKategori from './kategori';
-export {ListKontenPopuler, ListKontenKategori};
+import SearchBar from './search';
+export {ListKontenPopuler, ListKontenKategori, SearchBar};
