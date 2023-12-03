@@ -9,12 +9,10 @@ import {
   DetailKategori,
   search,
   TambahKonten,
+  DetailKonten,
+  UbahKonten,
 } from '../screens';
-import {
-  Home2,
-  ProfileCircle,
-  Book,
-} from 'iconsax-react-native';
+import {Home2, ProfileCircle, Book} from 'iconsax-react-native';
 import {fontType, colors} from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -118,6 +116,18 @@ const Router = () => {
         }}
       />
       <Stack.Screen
+        name="DetailKonten"
+        component={DetailKonten}
+        options={{
+          headerShown: false,
+          animationEnabled: true,
+          animationTypeForReplace: 'pop',
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+      <Stack.Screen
         name="CariKonten"
         component={search}
         options={{
@@ -133,7 +143,19 @@ const Router = () => {
           animationEnabled: true,
           animationTypeForReplace: 'pop',
           gestureEnabled: true,
-          gestureDirection : 'horizontal',
+          gestureDirection: 'horizontal',
+          ...TransitionPresets.SlideFromRightIOS,
+        }}
+      />
+      <Stack.Screen
+        name="UbahKonten"
+        component={UbahKonten}
+        options={{
+          headerShown: false,
+          animationEnabled: true,
+          animationTypeForReplace: 'pop',
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
           ...TransitionPresets.SlideFromRightIOS,
         }}
       />

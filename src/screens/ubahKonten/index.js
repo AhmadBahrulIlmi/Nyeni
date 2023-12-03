@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -14,24 +14,67 @@ import {fontType, colors} from '../../theme';
 import {Category} from '../../../data';
 import axios from 'axios';
 
-const TambahKonten = () => {
-  const navigation = useNavigation();
+const UbahKonten = ({route}) => {
+  const {kontenId} = route.params;
   const dataCategory = Category;
+  const [dataKonten, setdataKonten] = useState({
+    category: {},
+    title: '',
+    description: '',
+    origin: '',
+    conclusion: '',
+    image: '',
+  });
+  const handleChange = (key, value) => {
+    setdataKonten({
+      ...dataKonten,
+      [key]: value,
+    });
+  };
+  const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
-  const handleUpload = async () => {
+  useEffect(() => {
+    getKontenById();
+  }, [kontenId]);
+
+  const getKontenById = async () => {
+    try {
+      const response = await axios.get(
+        `https://6569991fde53105b0dd751f3.mockapi.io/nyeniapp/kontennyeni/${kontenId}`,
+      );
+      setdataKonten({
+        title: response.data.judul,
+        description: response.data.deskripsi,
+        origin: response.data.asal,
+        conclusion: response.data.kesimpulan,
+        category: {
+          id: response.data.kategori.id,
+          name: response.data.kategori.name,
+        },
+      });
+      setImage(response.data.image);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUpdate = async () => {
     setLoading(true);
     try {
       await axios
-        .post(
-          'https://6569991fde53105b0dd751f3.mockapi.io/nyeniapp/kontennyeni',
+        .put(
+          `https://6569991fde53105b0dd751f3.mockapi.io/nyeniapp/kontennyeni/${kontenId}`,
           {
             judul: dataKonten.title,
-            deskripsi: dataKonten.description,
-            asal: dataKonten.origin,
-            kesimpulan: dataKonten.conclusion,
+            deskripsi : dataKonten.description,
+            asal : dataKonten.origin,
+            kesimpulan : dataKonten.conclusion,
             kategori: dataKonten.category,
             image,
+            content: dataKonten.content,
           },
         )
         .then(function (response) {
@@ -47,21 +90,6 @@ const TambahKonten = () => {
     }
   };
 
-  const [dataKonten, setdataKonten] = useState({
-    category: {},
-    title: '',
-    description: '',
-    origin: '',
-    conclusion: '',
-    image: '',
-  });
-  const handleChange = (key, value) => {
-    setdataKonten({
-      ...dataKonten,
-      [key]: value,
-    });
-  };
-  const [image, setImage] = useState(null);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -160,20 +188,20 @@ const TambahKonten = () => {
         </View>
       </ScrollView>
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={styles.button} onPress={handleUpload}>
-          <Text style={styles.buttonLabel}>Upload</Text>
+        <TouchableOpacity style={styles.button} onPress={handleUpdate}>
+          <Text style={styles.buttonLabel}>Update</Text>
         </TouchableOpacity>
       </View>
       {loading && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="rgb(255, 161, 0)" />
+          <ActivityIndicator size="large" color={colors.blue()} />
         </View>
       )}
     </View>
   );
 };
 
-export default TambahKonten;
+export default UbahKonten;
 
 const styles = StyleSheet.create({
   container: {

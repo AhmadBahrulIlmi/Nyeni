@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState, useCallback} from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,12 +10,15 @@ import {
   FlatList,
   Animated,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from 'react-native';
 import {SearchNormal1, NotificationBing, Setting2} from 'iconsax-react-native';
 import {fontType, colors} from '../../theme';
 import {CategoryList, kontenPopuler} from '../../../data';
-import {ListKontenPopuler} from '../../components';
-import {useNavigation} from '@react-navigation/native';
+import {ListKontenPopuler, ListKontenNyeni} from '../../components';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import axios from 'axios';
+import {RefreshControl} from 'react-native-gesture-handler';
 
 const ItemCategory = ({item, onPress, color}) => {
   return (
@@ -181,6 +184,12 @@ const styles = StyleSheet.create({
     fontFamily: fontType['Pjs-ExtraBold'],
     color: colors.black(),
   },
+  titleRekomendasi: {
+    fontSize: 20,
+    marginRight: 20,
+    fontFamily: fontType['Pjs-ExtraBold'],
+    color: colors.black(),
+  },
   settingContainer: {
     marginLeft: 15,
   },
@@ -224,6 +233,35 @@ const category = StyleSheet.create({
 });
 
 const IsiKonten = ({animatedValue}) => {
+  const [loading, setLoading] = useState(true);
+  const [dataKonten, setdataKonten] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const getDataBlog = async () => {
+    try {
+      const response = await axios.get(
+        'https://6569991fde53105b0dd751f3.mockapi.io/nyeniapp/kontennyeni',
+      );
+      setdataKonten(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getDataBlog();
+      setRefreshing(false);
+    }, 1500);
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getDataBlog();
+    }, []),
+  );
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -231,186 +269,29 @@ const IsiKonten = ({animatedValue}) => {
         [{nativeEvent: {contentOffset: {y: animatedValue}}}],
         {useNativeDriver: false},
       )}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       scrollEventThrottle={16}>
       <View style={styles.headerPopuler}>
         <Text style={styles.titlePopuler}>Populer</Text>
       </View>
       <View style={styles.IsiKonten}>
         <View style={{marginHorizontal: 20}}>
-          <ListKontenPopuler data={kontenPopuler} />
+          {loading ? (
+            <ActivityIndicator size={'large'} color="rgb(255, 161, 0)" />
+          ) : (
+            <ListKontenPopuler data={kontenPopuler} />
+          )}
         </View>
       </View>
       <View>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          contentContainerStyle={{gap: 0}}>
-          <View
-            style={{
-              ...itemHorizontal.card,
-              marginTop: 20,
-              marginLeft: 24,
-              width: 200,
-              height: 100,
-              position: 'relative',
-              opacity: 0.8,
-            }}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/736x/7e/0d/a9/7e0da932ed99c04c700899f6bb7f659e.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardIsi}>
-              <Text style={itemHorizontal.cardMiniText}>Musik</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              ...itemHorizontal.card,
-              marginTop: 20,
-              marginLeft: 24,
-              width: 200,
-              height: 100,
-              position: 'relative',
-              opacity: 0.8,
-            }}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/0f/5f/57/0f5f57953abd50242da45a458a3fb2cd.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardIsi}>
-              <Text style={itemHorizontal.cardMiniText}>Seni Tari</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              ...itemHorizontal.card,
-              marginTop: 20,
-              marginLeft: 24,
-              width: 200,
-              height: 100,
-              position: 'relative',
-              opacity: 0.8,
-            }}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/0b/5b/3c/0b5b3c05788a2dfc3814d127dc0b5a10.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardIsi}>
-              <Text style={itemHorizontal.cardMiniText}>Kerajinan</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              ...itemHorizontal.card,
-              marginTop: 20,
-              marginLeft: 24,
-              width: 200,
-              height: 100,
-              position: 'relative',
-              opacity: 0.8,
-            }}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/31/e5/10/31e5101a39b50a9ea93acf3672f107fe.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardIsi}>
-              <Text style={itemHorizontal.cardMiniText}>Pertunjukan</Text>
-            </View>
-          </View>
-        </ScrollView>
-      </View>
-      <View>
-        <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          contentContainerStyle={{gap: 0}}>
-          <View
-            style={{
-              ...itemHorizontal.card,
-              marginTop: 20,
-              marginLeft: 24,
-              width: 200,
-              height: 100,
-              position: 'relative',
-              opacity: 0.8,
-            }}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/736x/7e/0d/a9/7e0da932ed99c04c700899f6bb7f659e.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardIsi}>
-              <Text style={itemHorizontal.cardMiniText}>Musik</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              ...itemHorizontal.card,
-              marginTop: 20,
-              marginLeft: 24,
-              width: 200,
-              height: 100,
-              position: 'relative',
-              opacity: 0.8,
-            }}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/0f/5f/57/0f5f57953abd50242da45a458a3fb2cd.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardIsi}>
-              <Text style={itemHorizontal.cardMiniText}>Seni Tari</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              ...itemHorizontal.card,
-              marginTop: 20,
-              marginLeft: 24,
-              width: 200,
-              height: 100,
-              position: 'relative',
-              opacity: 0.8,
-            }}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/0b/5b/3c/0b5b3c05788a2dfc3814d127dc0b5a10.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardIsi}>
-              <Text style={itemHorizontal.cardMiniText}>Kerajinan</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              ...itemHorizontal.card,
-              marginTop: 20,
-              marginLeft: 24,
-              width: 200,
-              height: 100,
-              position: 'relative',
-              opacity: 0.8,
-            }}>
-            <Image
-              source={{
-                uri: 'https://i.pinimg.com/564x/31/e5/10/31e5101a39b50a9ea93acf3672f107fe.jpg',
-              }}
-              style={itemHorizontal.cardImage}
-            />
-            <View style={itemHorizontal.cardIsi}>
-              <Text style={itemHorizontal.cardMiniText}>Pertunjukan</Text>
-            </View>
+        <View style={styles.headerPopuler}>
+          <Text style={styles.titleRekomendasi}>Kesenian Jawa Timur</Text>
+        </View>
+        <ScrollView showsHorizontalScrollIndicator={true} horizontal>
+          <View>
+            <ListKontenNyeni data={dataKonten} />
           </View>
         </ScrollView>
       </View>

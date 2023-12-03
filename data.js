@@ -17,7 +17,38 @@ export const CategoryList = [
   },
   {
     id: 5,
-    categoryName: 'Kerajinan Tangan',
+    categoryName: 'Kerajinan',
+  },
+];
+
+export const Category = [
+  {
+    id: 1,
+    name: 'Musik',
+  },
+  {
+    id: 2,
+    name: 'Pertunjukan',
+  },
+  {
+    id: 3,
+    name: 'Seni Tari',
+  },
+  {
+    id: 4,
+    name: 'Kerajinan',
+  },
+  {
+    id: 5,
+    name: 'Seni Wayang',
+  },
+  {
+    id: 6,
+    name: 'Seni Lukis',
+  },
+  {
+    id: 7,
+    name: 'Seni Tenun',
   },
 ];
 
