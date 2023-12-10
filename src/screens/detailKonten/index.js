@@ -4,15 +4,16 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image,
   Animated,
   ActivityIndicator,
 } from 'react-native';
 import {Back, More} from 'iconsax-react-native';
 import {fontType, colors} from '../../theme';
 import {useNavigation} from '@react-navigation/native';
-import axios from 'axios';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 import ActionSheet from 'react-native-actions-sheet';
+import FastImage from 'react-native-fast-image';
 
 const DetailKonten = ({route}) => {
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -38,37 +39,49 @@ const DetailKonten = ({route}) => {
   };
 
   useEffect(() => {
-    getKontenById();
+    const subscriber = firestore()
+      .collection('konten')
+      .doc(kontenId)
+      .onSnapshot(documentSnapshot => {
+        const dataKonten = documentSnapshot.data();
+        if (dataKonten) {
+          console.log('Data Konten : ', dataKonten);
+          setdataKonten(dataKonten);
+        } else {
+          console.log(`Data Konten dengan id ${kontenId} tidak ada.`);
+        }
+      });
+    setLoading(false);
+    return () => subscriber();
   }, [kontenId]);
-
-  const getKontenById = async () => {
-    try {
-      const response = await axios.get(
-        `https://6569991fde53105b0dd751f3.mockapi.io/nyeniapp/kontennyeni/${kontenId}`,
-      );
-      setdataKonten(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const navigateEdit = () => {
     closeActionSheet();
     navigation.navigate('UbahKonten', {kontenId});
   };
+
   const handleDelete = async () => {
-    await axios
-      .delete(
-        `https://6569991fde53105b0dd751f3.mockapi.io/nyeniapp/kontennyeni/${kontenId}`,
-      )
-      .then(() => {
-        closeActionSheet();
-        navigation.navigate('Home');
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    setLoading(true);
+    try {
+      await firestore()
+        .collection('konten')
+        .doc(kontenId)
+        .delete()
+        .then(() => {
+          console.log('Konten dihapus!');
+        });
+      if (dataKonten?.image) {
+        const imageRef = storage().refFromURL(dataKonten?.image);
+        await imageRef.delete();
+      }
+      console.log('Konten dihapus!');
+      closeActionSheet();
+      setdataKonten(null);
+      setLoading(false);
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -96,12 +109,14 @@ const DetailKonten = ({route}) => {
             {useNativeDriver: true},
           )}
           contentContainerStyle={{}}>
-          <Image
+          <FastImage
             style={styles.image}
             source={{
               uri: dataKonten?.image,
+              headers: {Authorization: 'someAuthToken'},
+              priority: FastImage.priority.high,
             }}
-            resizeMode={'cover'}
+            resizeMode={FastImage.resizeMode.cover}
           />
           <View
             style={{
@@ -109,10 +124,10 @@ const DetailKonten = ({route}) => {
               justifyContent: 'space-between',
               marginTop: 15,
             }}></View>
-          <Text style={styles.title}>{dataKonten?.judul}</Text>
-          <Text style={styles.content}>{dataKonten?.deskripsi}</Text>
-          <Text style={styles.content}>{dataKonten?.asal}</Text>
-          <Text style={styles.content}>{dataKonten?.kesimpulan}</Text>
+          <Text style={styles.title}>{dataKonten?.title}</Text>
+          <Text style={styles.content}>{dataKonten?.description}</Text>
+          <Text style={styles.content}>{dataKonten?.origin}</Text>
+          <Text style={styles.content}>{dataKonten?.conclusion}</Text>
         </Animated.ScrollView>
       )}
       <Animated.View

@@ -8,45 +8,62 @@ import {
   ScrollView,
   ActivityIndicator,
 } from 'react-native';
-import {ArrowLeft} from 'iconsax-react-native';
+import {Add, GalleryAdd, ArrowLeft} from 'iconsax-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {fontType, colors} from '../../theme';
 import {Category} from '../../../data';
-import axios from 'axios';
+import ImagePicker from 'react-native-image-crop-picker';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
+import FastImage from 'react-native-fast-image';
 
 const TambahKonten = () => {
   const navigation = useNavigation();
   const dataCategory = Category;
   const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
 
-  const handleUpload = async () => {
-    setLoading(true);
-    try {
-      await axios
-        .post(
-          'https://6569991fde53105b0dd751f3.mockapi.io/nyeniapp/kontennyeni',
-          {
-            judul: dataKonten.title,
-            deskripsi: dataKonten.description,
-            asal: dataKonten.origin,
-            kesimpulan: dataKonten.conclusion,
-            kategori: dataKonten.category,
-            image,
-          },
-        )
-        .then(function (response) {
-          console.log(response);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-      setLoading(false);
-      navigation.navigate('Home');
-    } catch (e) {
-      console.log(e);
-    }
+  const handleImagePick = async () => {
+    ImagePicker.openPicker({
+      width: 1080,
+      height: 1080,
+      cropping: true,
+    })
+      .then(image => {
+        console.log(image);
+        setImage(image.path);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
+  const handleUpload = async () => {
+    let filename = image.substring(image.lastIndexOf('/') + 1);
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+    const reference = storage().ref(`kontenimages/${filename}`);
+
+    setLoading(true);
+    try {
+      await reference.putFile(image);
+      const url = await reference.getDownloadURL();
+      await firestore().collection('konten').add({
+        title: dataKonten.title,
+        description: dataKonten.description,
+        origin: dataKonten.origin,
+        conclusion: dataKonten.conclusion,
+        category: dataKonten.category,
+        image: url,
+      });
+      setLoading(false);
+      console.log('Konten berhasil ditambahkan!');
+      navigation.navigate('Home');
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const [dataKonten, setdataKonten] = useState({
     category: {},
     title: '',
@@ -61,13 +78,18 @@ const TambahKonten = () => {
       [key]: value,
     });
   };
-  const [image, setImage] = useState(null);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <ArrowLeft color="rgb(255, 161, 0)" variant="Linear" size={24} />
         </TouchableOpacity>
+        <View style={{flex: 1, alignItems: 'center', paddingRight: 25}}>
+          <Text style={{color: 'rgb(255, 161, 0)', fontSize: 15}}>
+            Tambah Konten
+          </Text>
+        </View>
       </View>
       <ScrollView
         contentContainerStyle={{
@@ -116,15 +138,6 @@ const TambahKonten = () => {
           />
         </View>
         <View style={[textInput.border]}>
-          <TextInput
-            placeholder="Gambar"
-            value={image}
-            onChangeText={text => setImage(text)}
-            placeholderTextColor={colors.grey(0.3)}
-            style={textInput.image}
-          />
-        </View>
-        <View style={[textInput.border]}>
           <Text
             style={{
               fontSize: 16,
@@ -158,6 +171,58 @@ const TambahKonten = () => {
             })}
           </View>
         </View>
+        {image ? (
+          <View style={{position: 'relative'}}>
+            <FastImage
+              style={{width: '100%', height: 127, borderRadius: 10}}
+              source={{
+                uri: image,
+                headers: {Authorization: 'someAuthToken'},
+                priority: FastImage.priority.high,
+              }}
+              resizeMode={FastImage.resizeMode.cover}
+            />
+            <TouchableOpacity
+              style={{
+                position: 'absolute',
+                top: -5,
+                right: -5,
+                backgroundColor: 'rgb(255, 161, 0)',
+                borderRadius: 25,
+              }}
+              onPress={() => setImage(null)}>
+              <Add
+                size={20}
+                variant="Linear"
+                color={colors.white()}
+                style={{transform: [{rotate: '45deg'}]}}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity onPress={handleImagePick}>
+            <View
+              style={[
+                textInput.content,
+                {
+                  gap: 10,
+                  paddingVertical: 20,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                },
+              ]}>
+              <GalleryAdd color={colors.grey(0.6)} variant="Linear" size={30} />
+              <Text
+                style={{
+                  fontFamily: fontType['Pjs-Regular'],
+                  fontSize: 12,
+                  color: colors.grey(0.6),
+                }}>
+                Tambah Gambar
+              </Text>
+            </View>
+          </TouchableOpacity>
+        )}
       </ScrollView>
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.button} onPress={handleUpload}>

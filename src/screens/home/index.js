@@ -1,11 +1,9 @@
-import React, {useRef, useState, useCallback} from 'react';
+import React, {useRef, useState, useCallback, useEffect} from 'react';
 import {
   ScrollView,
   StyleSheet,
   Text,
   View,
-  Image,
-  TextInput,
   TouchableOpacity,
   FlatList,
   Animated,
@@ -16,8 +14,8 @@ import {SearchNormal1, NotificationBing, Setting2} from 'iconsax-react-native';
 import {fontType, colors} from '../../theme';
 import {CategoryList, kontenPopuler} from '../../../data';
 import {ListKontenPopuler, ListKontenNyeni} from '../../components';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
-import axios from 'axios';
+import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
 import {RefreshControl} from 'react-native-gesture-handler';
 
 const ItemCategory = ({item, onPress, color}) => {
@@ -236,31 +234,41 @@ const IsiKonten = ({animatedValue}) => {
   const [loading, setLoading] = useState(true);
   const [dataKonten, setdataKonten] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const getDataBlog = async () => {
-    try {
-      const response = await axios.get(
-        'https://6569991fde53105b0dd751f3.mockapi.io/nyeniapp/kontennyeni',
-      );
-      setdataKonten(response.data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    useEffect(() => {
+      const subscriber = firestore()
+        .collection('konten')
+        .onSnapshot(querySnapshot => {
+          const blogs = [];
+          querySnapshot.forEach(documentSnapshot => {
+            blogs.push({
+              ...documentSnapshot.data(),
+              id: documentSnapshot.id,
+            });
+          });
+          setdataKonten(blogs);
+          setLoading(false);
+        });
+      return () => subscriber();
+    }, []);
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    setTimeout(() => {
-      getDataBlog();
-      setRefreshing(false);
-    }, 1500);
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      getDataBlog();
-    }, []),
-  );
+    const onRefresh = useCallback(() => {
+      setRefreshing(true);
+      setTimeout(() => {
+        firestore()
+          .collection('konten')
+          .onSnapshot(querySnapshot => {
+            const blogs = [];
+            querySnapshot.forEach(documentSnapshot => {
+              blogs.push({
+                ...documentSnapshot.data(),
+                id: documentSnapshot.id,
+              });
+            });
+            setdataKonten(blogs);
+          });
+        setRefreshing(false);
+      }, 1500);
+    }, []);
 
   return (
     <ScrollView

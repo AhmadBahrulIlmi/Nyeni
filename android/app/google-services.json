@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "905362990787",
+    "project_id": "nyeniapp",
+    "storage_bucket": "nyeniapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905362990787:android:ee3234a920d8e5b16ae476",
+        "android_client_info": {
+          "package_name": "com.nyeni"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMefVtopqTezKDpiBhX2kBzFKasNry164"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

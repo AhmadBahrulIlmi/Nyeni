@@ -21,8 +21,8 @@ const ListKontenNyeni = ({data}) => {
           style={itemHorizontal.cardImage}
         />
         <View style={itemHorizontal.cardDescription}>
-          <Text style={itemHorizontal.cardCategory}>{item.kategori.name}</Text>
-          <Text style={itemHorizontal.cardText}>{item.deskripsi}</Text>
+          <Text style={itemHorizontal.cardCategory}>{item.category.name}</Text>
+          <Text style={itemHorizontal.cardText}>{item.description}</Text>
         </View>
       </TouchableOpacity>
     );
