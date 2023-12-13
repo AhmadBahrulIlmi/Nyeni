@@ -16,6 +16,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import FastImage from 'react-native-fast-image';
+import auth from '@react-native-firebase/auth';
 
 const TambahKonten = () => {
   const navigation = useNavigation();
@@ -39,6 +40,7 @@ const TambahKonten = () => {
   };
 
   const handleUpload = async () => {
+    const authorId = auth().currentUser.uid;
     let filename = image.substring(image.lastIndexOf('/') + 1);
     const extension = filename.split('.').pop();
     const name = filename.split('.').slice(0, -1).join('.');
@@ -56,6 +58,7 @@ const TambahKonten = () => {
         conclusion: dataKonten.conclusion,
         category: dataKonten.category,
         image: url,
+        authorId
       });
       setLoading(false);
       console.log('Konten berhasil ditambahkan!');

@@ -7,4 +7,7 @@ import search from "./search";
 import TambahKonten from "./tambahKonten";
 import DetailKonten from "./detailKonten";
 import UbahKonten from "./ubahKonten";
-export {Home, Kategori, Profile, Detail, DetailKategori, search, TambahKonten, DetailKonten, UbahKonten}
+import Login from "./login"
+import Register from "./register"
+import SplashScreen from "./splashscreen"
+export {Home, Kategori, Profile, Detail, DetailKategori, search, TambahKonten, DetailKonten, UbahKonten, Login, Register, SplashScreen}

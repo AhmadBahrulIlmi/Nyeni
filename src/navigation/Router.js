@@ -11,6 +11,9 @@ import {
   TambahKonten,
   DetailKonten,
   UbahKonten,
+  SplashScreen,
+  Register,
+  Login,
 } from '../screens';
 import {Home2, ProfileCircle, Book} from 'iconsax-react-native';
 import {fontType, colors} from '../theme';
@@ -85,7 +88,7 @@ function MainApp() {
 }
 const Router = () => {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="SplashScreen">
       <Stack.Screen
         name="MainApp"
         component={MainApp}
@@ -158,6 +161,21 @@ const Router = () => {
           gestureDirection: 'horizontal',
           ...TransitionPresets.SlideFromRightIOS,
         }}
+      />
+      <Stack.Screen
+        name="SplashScreen"
+        component={SplashScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{headerShown: false}}
       />
     </Stack.Navigator>
   );

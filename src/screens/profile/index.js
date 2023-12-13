@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -18,9 +18,52 @@ import {
   AddSquare,
 } from 'iconsax-react-native';
 import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Profile() {
   const navigation = useNavigation();
+  const [profileData, setProfileData] = useState(null);
+  useEffect(() => {
+    const user = auth().currentUser;
+    const fetchProfileData = () => {
+      try {
+        const user = auth().currentUser;
+        if (user) {
+          const userId = user.uid;
+          const userRef = firestore().collection('users').doc(userId);
+
+          const unsubscribeProfile = userRef.onSnapshot(doc => {
+            if (doc.exists) {
+              const userData = doc.data();
+              setProfileData(userData);
+            } else {
+              console.error('Dokumen pengguna tidak ditemukan.');
+            }
+          });
+
+          return () => {
+            unsubscribeProfile();
+          };
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+    fetchProfileData();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await auth().signOut();
+      await AsyncStorage.removeItem('userData');
+      navigation.replace('Login');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -47,10 +90,9 @@ export default function Profile() {
           source={{
             uri: 'https://media.licdn.com/dms/image/D4E03AQFQ-YNoTb76lQ/profile-displayphoto-shrink_800_800/0/1681642465471?e=1704326400&v=beta&t=DRI-STPPSoMPbOQVQhueEHkrF7Q6iXSNg4OQDtJAfho',
           }}
-          style={styles.profileImage}
-        />
-        <Text style={styles.name}>Ahmad Bahrul Ilmi</Text>
-        <Text style={styles.email}>bahrul@gmail.com</Text>
+          style={styles.profileImage}/>
+        <Text style={styles.name}>{profileData?.fullName}</Text>
+        <Text style={styles.email}>{profileData?.email}</Text>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Edit Profil</Text>
         </TouchableOpacity>
@@ -106,7 +148,7 @@ export default function Profile() {
             <Text style={styles.menuItemText}>Pengaturan</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
           <View
             style={{
               ...styles.menuContainer,
